@@ -2,13 +2,6 @@ pipeline {
     agent { dockerfile true }
 
     stages {
-        stage('Build & Test') {   
-            steps {                                           
-                // Build
-                sh 'go build'
-            }            
-        }
-
         stage('deploy') {
             steps {
                 sh 'docker rmi -f docker-go'
