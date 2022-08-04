@@ -1,10 +1,25 @@
 pipeline {
-    agent { docker { image 'golang:latest' } }
+    agent any
+
     stages {
-        stage('test version') {
-            steps {
-                sh 'go version'
-            }
+        stage('Build & Test') {   
+            // Use golang.
+            agent { docker { image 'golang' } }
+
+            steps {                                           
+                // Create our project directory.
+                sh 'cd ${GOPATH}/src'
+                sh 'mkdir -p ${GOPATH}/src/jenkins-go'
+
+                // Copy all files in our Jenkins workspace to our project directory.                
+                sh 'cp -r ${WORKSPACE}/* ${GOPATH}/src/jenkins-go'
+
+                // Build the app.
+                sh 'go build'
+
+                // Clean cache
+                sh 'go clean --cache'               
+            }            
         }
         stage('deploy') {
             steps {
