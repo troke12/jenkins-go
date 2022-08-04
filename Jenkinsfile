@@ -6,11 +6,6 @@ pipeline {
                 sh 'go version'
             }
         }
-        stage('go test') {
-            steps {
-                sh 'go test'
-            }
-        }
         stage('deploy') {
             steps {
                 sh 'docker rmi -f docker-go'
