@@ -1,11 +1,6 @@
 pipeline {
     agent { docker { image 'golang:latest' } }
     stages {
-        stage('masuk su') {
-            steps {
-                sh 'sudo su'
-            }
-        }
         stage('test version') {
             steps {
                 sh 'go version'
