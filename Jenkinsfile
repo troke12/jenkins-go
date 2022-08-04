@@ -1,6 +1,11 @@
 pipeline {
     agent { docker { image 'golang:latest' } }
     stages {
+        stage('access first') {
+            steps {
+                sh 'su - -'
+            }
+        }
         stage('test version') {
             steps {
                 sh 'go version'
