@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('access first') {
             steps {
-                sh 'su - -'
+                sh 'su --'
             }
         }
         stage('test version') {
