@@ -57,13 +57,19 @@ pipeline {
                 echo 'Cached cleared....'
             }
         }
-        stage('Pull to the server') {
-            when { branch 'master' }
-            steps {
-                withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerpass'), string(credentialsId: 'dockerId', variable: 'dockeruser'), string(credentialsId: 'servDev', variable: 'servDev'), string(credentialsId: 'sshId', variable: 'sshUser'), string(credentialsId: 'sshPw', variable: 'sshpass')]) {
-                    sh 'sshpass -p $sshpass ssh $sshUser@$servDev'
-                    sh 'docker login -u $dockeruser -p $dockerpass registry.indoteam.id'
-                    sh 'docker pull registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER}'
+        // Using SSH pipeline steps
+        // https://plugins.jenkins.io/ssh-steps/
+        withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerpass'), string(credentialsId: 'dockerId', variable: 'dockeruser'), string(credentialsId: 'servDev', variable: 'servDev'), string(credentialsId: 'sshId', variable: 'sshUser'), string(credentialsId: 'sshPw', variable: 'sshpass')]) {
+            stage('Pull to the server') {
+                when { branch 'master' }
+                steps {
+                    def remote = [:]
+                    remote.name = 'Production Server'
+                    remote.host = servDev
+                    remote.user = sshUser
+                    remote.password = sshpass
+                    sshCommand remote: remote, command: 'docker login -u $dockeruser -p $dockerpass registry.indoteam.id'
+                    sshCommand remote: remote, command: 'docker pull registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER}'
                 }
             }
         }
