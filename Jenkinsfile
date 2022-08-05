@@ -1,25 +1,21 @@
 pipeline {
-    agent { dockerfile true }
-
+    agent any
     stages {
-        stage('deploy') {
+        stage('build') {
             steps {
-                sh 'docker rmi -f docker-go'
-                sh 'docker container prune -f'
-                sh 'docker build . -t docker-go'
-            }
-        
-        }
-        stage('start') {
-            steps {
-                sh 'docker run -d -p 4545:8080 --name docker-go docker-go'
+                sh 'docker build -t registry.indoteam.id/indoteam/jenkins-go:${BUILD_NUMBER} .'
             }
         }
-        
-        stage('stop') {
+        stage('login docker') {
             steps {
-                sh 'sleep 120'
-                sh 'docker stop docker-go'
+                withCredentials([string(credentialsId: 'c979ffa3-2123-4e81-a6a3-db67052f5779', variable: 'docker-password'), string(credentialsId: 'c979ffa3-2123-4e81-a6a3-db67052f5779', variable: 'docker-username')]) {
+                    sh 'docker login -u $docker-username -p $docker-password registry.indoteam.id'
+                }
+            }
+        }
+        stage('push') {
+            steps {
+                sh 'docker push registry.indoteam.id/indoteam/jenkins-go:${BUILD_NUMBER}'
             }
         }
     }
