@@ -9,7 +9,7 @@ pipeline {
                 sh 'docker build -t registry.indoteam.id/indoteam/jenkins-go-dev:${BUILD_NUMBER} .'
             }
         }
-        stage('Build For Master') {
+        stage('Build For Staging') {
             when { branch 'staging' }
             steps {
                 echo 'Starting building for staging'
