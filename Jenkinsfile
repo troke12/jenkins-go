@@ -11,15 +11,14 @@ pipeline {
                 echo 'Branch dev so skip'
             }
         }
-    
         stage('Build For Production') {
             when { branch 'master' }
             steps {
                 echo 'brahuuuuuuuu master'
             }
         }
-        
         stage('build') {
+            steps {
                 echo 'Starting building for master'
                 sh 'docker build -t registry.indoteam.id/indoteam/jenkins-go-${prefix_master}:${BUILD_NUMBER} .'
             }
