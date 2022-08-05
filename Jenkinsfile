@@ -1,5 +1,10 @@
 //Start
 pipeline {
+    //Dev server
+    def dev = [:]
+    dev.name = 'Development Server'
+    dev.host = servDev
+
     agent any
     stages {
         stage('Build For Dev') {
@@ -60,16 +65,13 @@ pipeline {
         // Using SSH pipeline steps
         // https://plugins.jenkins.io/ssh-steps/
         stage('Pull to the server') {
-            when { branch 'master' }
-            steps {
-                withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerpass'), string(credentialsId: 'dockerId', variable: 'dockeruser'), string(credentialsId: 'servDev', variable: 'servDev'), string(credentialsId: 'sshId', variable: 'sshUser'), string(credentialsId: 'sshPw', variable: 'sshpass')]) {
-                    def remote = [:]
-                    remote.name = 'Production Server'
-                    remote.host = servDev
-                    remote.user = sshUser
-                    remote.password = sshpass
-                    sshCommand remote: remote, command: 'docker login -u $dockeruser -p $dockerpass registry.indoteam.id'
-                    sshCommand remote: remote, command: 'docker pull registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER}'
+            withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerpass'), string(credentialsId: 'dockerId', variable: 'dockeruser'), string(credentialsId: 'servDev', variable: 'servDev'), string(credentialsId: 'sshId', variable: 'sshUser'), string(credentialsId: 'sshPw', variable: 'sshpass')]) {
+                when { branch 'master' }
+                dev.user = sshUser
+                dev.password = sshpass
+                steps {
+                    sshCommand remote: dev, command: 'docker login -u $dockeruser -p $dockerpass registry.indoteam.id'
+                    sshCommand remote: dev, command: 'docker pull registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER}'
                 }
             }
         }
