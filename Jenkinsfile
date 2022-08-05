@@ -59,10 +59,10 @@ pipeline {
         }
         // Using SSH pipeline steps
         // https://plugins.jenkins.io/ssh-steps/
-        withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerpass'), string(credentialsId: 'dockerId', variable: 'dockeruser'), string(credentialsId: 'servDev', variable: 'servDev'), string(credentialsId: 'sshId', variable: 'sshUser'), string(credentialsId: 'sshPw', variable: 'sshpass')]) {
-            stage('Pull to the server') {
-                when { branch 'master' }
-                steps {
+        stage('Pull to the server') {
+            when { branch 'master' }
+            steps {
+                withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerpass'), string(credentialsId: 'dockerId', variable: 'dockeruser'), string(credentialsId: 'servDev', variable: 'servDev'), string(credentialsId: 'sshId', variable: 'sshUser'), string(credentialsId: 'sshPw', variable: 'sshpass')]) {
                     def remote = [:]
                     remote.name = 'Production Server'
                     remote.host = servDev
