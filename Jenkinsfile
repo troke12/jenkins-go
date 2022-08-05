@@ -72,9 +72,9 @@ pipeline {
                         dev.password = sshpass
                         dev.allowAnyHosts = true
                         //sshCommand remote: dev, command: 'ls -l'
-                        //sshCommand remote: dev, command: 'docker login -u $dockeruser -p $dockerpass registry.indoteam.id'
+                        sshCommand remote: dev, command: "docker login -u ${dockeruser} -p ${dockerpass} registry.indoteam.id"
                         sshCommand remote: dev, command: "docker pull registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER}"
-                        sshCommand remote: dev, command: "docker run -d -p 6060:8080 --name jenkins-go-master jenkins-go-master:${BUILD_NUMBER}"
+                        sshCommand remote: dev, command: "docker run -d -p 6060:8080 --name jenkins-go-master registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER}"
                     }
                 }
             }
