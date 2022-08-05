@@ -61,7 +61,7 @@ pipeline {
             when { branch 'master' }
             steps {
                 withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerpass'), string(credentialsId: 'dockerId', variable: 'dockeruser'), string(credentialsId: 'servDev', variable: 'servDev'), string(credentialsId: 'sshId', variable: 'sshUser'), string(credentialsId: 'sshPw', variable: 'sshpass')]) {
-                    sh 'sshpass -p $sshpass $sshUser@$servDev'
+                    sh 'sshpass -p $sshpass ssh $sshUser@$servDev'
                     sh 'docker login -u $dockeruser -p $dockerpass registry.indoteam.id'
                     sh 'docker pull registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER}'
                 }
