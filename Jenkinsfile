@@ -11,7 +11,7 @@ pipeline {
                 echo 'Branch dev so skip'
             }
         }
-        stage('Build For Production') {
+        stage('Build For Pertet') {
             when { branch 'master' }
             steps {
                 echo 'brahuuuuuuuu master'
