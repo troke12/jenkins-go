@@ -5,13 +5,21 @@ def prefix_master = "master"
 pipeline {
     agent any
     stages {
-        stage('test branch') {
+        stage('Build For Production') {
+            when { branch 'development' }
             steps {
-                echo 'test branch : ' + ENV.BRANCH_NAME
+                echo 'Branch dev so skip'
             }
         }
-        stage('build') {
+    
+        stage('Build For Production') {
+            when { branch 'master' }
             steps {
+                echo 'brahuuuuuuuu master'
+            }
+        }
+        
+        stage('build') {
                 echo 'Starting building for master'
                 sh 'docker build -t registry.indoteam.id/indoteam/jenkins-go-${prefix_master}:${BUILD_NUMBER} .'
             }
