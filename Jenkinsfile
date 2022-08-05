@@ -1,26 +1,26 @@
-//Prefixes
-def prefix_master = "master"
-
 //Start
 pipeline {
     agent any
     stages {
-        stage('Build For Production') {
+        stage('Build For Dev') {
             when { branch 'development' }
             steps {
-                echo 'Branch dev so skip'
+                echo 'Starting building for Dev'
+                sh 'docker build -t registry.indoteam.id/indoteam/jenkins-go-dev:${BUILD_NUMBER} .'
             }
         }
-        stage('Build For Pertet') {
+        stage('Build For Master') {
+            when { branch 'staging' }
+            steps {
+                echo 'Starting building for staging'
+                sh 'docker build -t registry.indoteam.id/indoteam/jenkins-go-staging:${BUILD_NUMBER} .'
+            }
+        }
+        stage('Build For Master') {
             when { branch 'master' }
             steps {
-                echo 'brahuuuuuuuu master'
-            }
-        }
-        stage('build') {
-            steps {
                 echo 'Starting building for master'
-                sh 'docker build -t registry.indoteam.id/indoteam/jenkins-go-${prefix_master}:${BUILD_NUMBER} .'
+                sh 'docker build -t registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER} .'
             }
         }
         stage('login docker') {
@@ -30,10 +30,25 @@ pipeline {
                 }
             }
         }
-        stage('push') {
+        stage('push for dev') {
+            when { branch 'development' }
+            steps {
+                echo 'Starting pushing for dev'
+                sh 'docker push registry.indoteam.id/indoteam/jenkins-go-dev:${BUILD_NUMBER}'
+            }
+        }
+        stage('push for staging') {
+            when { branch 'staging' }
+            steps {
+                echo 'Starting pushing for staging'
+                sh 'docker push registry.indoteam.id/indoteam/jenkins-go-staging:${BUILD_NUMBER}'
+            }
+        }
+        stage('push for master') {
+            when { branch 'master' }
             steps {
                 echo 'Starting pushing for master'
-                sh 'docker push registry.indoteam.id/indoteam/jenkins-go-${prefix_master}:${BUILD_NUMBER}'
+                sh 'docker push registry.indoteam.id/indoteam/jenkins-go-master:${BUILD_NUMBER}'
             }
         }
         stage('clear cache') {
