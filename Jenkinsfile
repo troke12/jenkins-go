@@ -8,8 +8,8 @@ pipeline {
         }
         stage('login docker') {
             steps {
-                withCredentials([string(credentialsId: 'c979ffa3-2123-4e81-a6a3-db67052f5779', variable: 'docker-password'), string(credentialsId: 'c979ffa3-2123-4e81-a6a3-db67052f5779', variable: 'docker-username')]) {
-                    sh 'docker login -u $docker-username -p $docker-password registry.indoteam.id'
+                withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerpass'), string(credentialsId: 'dockerId', variable: 'dockeruser')]) {
+                    sh 'docker login -u $dockeruser -p $dockerpass registry.indoteam.id'
                 }
             }
         }
